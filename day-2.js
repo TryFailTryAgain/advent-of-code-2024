@@ -3,7 +3,6 @@
 // may be freely copied or excerpted with credit to the author.
 // Advent of Code 2024 Day 1 part 1-2
 
-const { error } = require('console');
 const fs = require('fs');
 
 let reports = prepareData();
