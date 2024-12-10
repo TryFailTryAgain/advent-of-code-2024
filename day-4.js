@@ -7,6 +7,7 @@ const fs = require('fs');
 
 let wordSearch = prepareData();
 console.log("Part 1: ", part1(wordSearch));
+console.log("Part 2: ", part2(wordSearch));
 
 
 function part1(wordSearch) {
@@ -16,6 +17,19 @@ function part1(wordSearch) {
         for (let j = 0; j < wordSearch[i].length; j++) {
             if (wordSearch[i][j] === 'X') {
                 count += findCompleteWords(wordSearch, 'XMAS', i, j);
+            }
+        }
+    }
+    return count;
+}
+
+function part2(wordSearch) {
+    // Finds how many x-MAS crosses are in the word search
+    let count = 0;
+    for (let i = 0; i < wordSearch.length; i++) {
+        for (let j = 0; j < wordSearch[i].length; j++) {
+            if (wordSearch[i][j] === 'A') {
+                count += findXMass(wordSearch, "MAS", i, j);
             }
         }
     }
@@ -67,6 +81,24 @@ function findCompleteWords(wordSearch, word, i, j) {
         }
     });
     return fullWordCount;
+}
+
+function findXMass(wordSearch, word, i, j){
+    let x1 = '', x2 = '';
+    // x1 down-left and up-right
+    if (i > 0 && j > 0 && i < wordSearch.length - 1 && j < wordSearch[i].length - 1) {
+        x1 = wordSearch[i+1][j-1] + wordSearch[i][j] + wordSearch[i-1][j+1];
+    }
+    // x2 up-left and down-right
+    if (i > 0 && j > 0 && i < wordSearch.length - 1 && j < wordSearch[i].length - 1) {
+        x2 = wordSearch[i-1][j-1] + wordSearch[i][j] + wordSearch[i+1][j+1];
+    }
+    // Checks if the x-MAS cross is present either forwards or backwards
+    if ((x1 === word || x1 === word.split('').reverse().join('')) &&
+        (x2 === word || x2 === word.split('').reverse().join(''))) {
+        return 1;
+    }
+    return 0;
 }
 
 function prepareData() {
