@@ -6,12 +6,27 @@
 const fs = require('fs');
 
 map = prepareData();
+console.log(findGuard(map));
 //console.log(map);
 //console.log("Part 1: ", part1(map));
 
 
 function part1(map) {
 
+}
+
+//Finds the position of the guard on the map
+function findGuard(map) {
+    let guard = [0,0];
+    const guardSymbols = ['^','>','v','<'];
+    for (let y = 0; y < map.length; y++) {
+        for (let x = 0; x < map[y].length; x++) {
+            if (guardSymbols.includes(map[y][x])) {
+                guard = [y,x];
+                return guard;
+            }
+        }
+    }
 }
 
 // Pulls data and prepares it for use from the input file
