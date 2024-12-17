@@ -6,9 +6,9 @@
 const fs = require('fs');
 
 map = prepareData();
+guardStartLocation = findGuard(map);
 console.log("Part 1: ", part1(map));
-// Debug map log
-fs.writeFileSync('output-6.txt', map.map(row => row.join('')).join('\n'), 'utf8');
+console.log("part 2:", part2(map, guardStartLocation));
 
 
 
@@ -28,6 +28,30 @@ function part1(map) {
     return tilesMovedAcross;
 }
 
+// Tests every possible position for the placed blocker and returns the number of times we create a loop
+function part2(map, guardStartLocation) {
+    cleanMap = prepareData();
+    let loops = 0;
+    for (let y = 0; y < map.length; y++) {
+        for (let x = 0; x < map[0].length; x++) {
+            // If the cell is pathed on then we know a blocker here will have the chance to create a loop
+            // We also need to make sure the blocker isn't placed on the guard's starting position
+            if (map[y][x] === 'X' && (y !== guardStartLocation[0] && x !== guardStartLocation[1])) {
+                let tilesMovedAcross = 0;
+                let newTestMap = structuredClone(cleanMap);
+                newTestMap[y][x] = '#'
+                // Now we have a new map with a blocker placed, we can test if the guard will loop
+                while (tilesMovedAcross < 10000 && guardMove(newTestMap, findGuard(newTestMap))) {
+                    tilesMovedAcross++;
+                }
+                if (tilesMovedAcross === 10000) {
+                    loops++;
+                }
+            }
+        }
+    }
+    return loops;
+}
 
 //Finds the position of the guard on the map and returns it as a pair of coordinates
 function findGuard(map) {
